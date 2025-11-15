@@ -36,10 +36,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      status: ${{ steps.compile.outputs.status }}
-      DEVICE_NAME: ${{ env.DEVICE_NAME }}
-      FILE_DATE: ${{ env.FILE_DATE }}
+
     steps:
     - name: Initialization environment PART.1
       env:
