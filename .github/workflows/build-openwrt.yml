@@ -74,7 +74,6 @@ jobs:
       uses: actions/checkout@main
 
     - name: Clone source code
-      working-directory: /workdir
       run: |
         rm -rf openwrt
         df -hT $PWD
