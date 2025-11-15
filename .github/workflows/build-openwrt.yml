@@ -36,7 +36,10 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    outputs:
+      status: ${{ steps.compile.outputs.status }}
+      DEVICE_NAME: ${{ env.DEVICE_NAME }}
+      FILE_DATE: ${{ env.FILE_DATE }}
     steps:
     - name: Initialization environment PART.1
       env:
@@ -123,7 +126,7 @@ jobs:
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
     - name: Compile the firmware FAKE
-      id: compile
+      id: compile-fake
       run: |
         echo "status=${{ needs.build.outputs.status }}" >> $GITHUB_OUTPUT
         echo "DEVICE_NAME=${{ needs.build.outputs.DEVICE_NAME }}" >> $GITHUB_ENV
