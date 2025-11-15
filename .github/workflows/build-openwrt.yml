@@ -68,7 +68,10 @@ jobs:
   download:
     runs-on: ubuntu-latest
     needs: preload
-
+    outputs:
+      status: ${{ steps.compile.outputs.status }}
+      DEVICE_NAME: ${{ env.DEVICE_NAME }}
+      FILE_DATE: ${{ env.FILE_DATE }}
     steps:
     - name: Checkout
       uses: actions/checkout@main
@@ -80,15 +83,7 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf $PWD/openwrt $GITHUB_WORKSPACE/openwrt
 
-  build:
-    runs-on: ubuntu-latest
-    needs: [init, download]
-    outputs:
-      status: ${{ steps.compile.outputs.status }}
-      DEVICE_NAME: ${{ env.DEVICE_NAME }}
-      FILE_DATE: ${{ env.FILE_DATE }}
 
-    steps:
     - name: Erase
       run: cd openwrt && make distclean
 
@@ -140,11 +135,6 @@ jobs:
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=-$(cat DEVICE_NAME)" >> $GITHUB_ENV
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
-  upload:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
     - name: Compile the firmware FAKE
       id: compile
       run: |
