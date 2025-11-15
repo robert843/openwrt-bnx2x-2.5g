@@ -34,9 +34,12 @@ env:
   TZ: Europe/Warsaw
 
 jobs:
-  preload:
+  build:
     runs-on: ubuntu-latest
-
+    outputs:
+      status: ${{ steps.compile.outputs.status }}
+      DEVICE_NAME: ${{ env.DEVICE_NAME }}
+      FILE_DATE: ${{ env.FILE_DATE }}
     steps:
     - name: Initialization environment PART.1
       env:
@@ -49,11 +52,6 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
 
-  init:
-    runs-on: ubuntu-latest
-    needs: preload
-
-    steps:
     - name: Initialization environment PART.2
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -65,14 +63,6 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
 
-  download:
-    runs-on: ubuntu-latest
-    needs: preload
-    outputs:
-      status: ${{ steps.compile.outputs.status }}
-      DEVICE_NAME: ${{ env.DEVICE_NAME }}
-      FILE_DATE: ${{ env.FILE_DATE }}
-    steps:
     - name: Checkout
       uses: actions/checkout@main
 
